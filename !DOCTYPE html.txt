@@ -1,0 +1,144 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<title>Fk Parfumerie - Tunnel de Vente</title>
+<style>
+body {
+font-family: Arial, sans-serif;
+background: url('https://images.unsplash.com/photo-1600181953384-77f03f3a43c2') no-repeat center center fixed;
+background-size: cover;
+margin: 0;
+padding: 0;
+}
+.form-container {
+background-color: rgba(255, 255, 255, 0.95);
+max-width: 600px;
+margin: 50px auto;
+padding: 30px;
+border-radius: 10px;
+}
+h1 {
+text-align: center;
+color: #8B0000;
+}
+label {
+font-weight: bold;
+margin-top: 10px;
+display: block;
+}
+input, textarea {
+width: 100%;
+padding: 10px;
+margin-top: 5px;
+border: 1px solid #ccc;
+border-radius: 5px;
+}
+.checkbox-group {
+margin-top: 10px;
+}
+.checkbox-group label {
+font-weight: normal;
+}
+button {
+background-color: #8B0000;
+color: white;
+padding: 12px;
+border: none;
+border-radius: 5px;
+width: 100%;
+font-size: 16px;
+cursor: pointer;
+margin-top: 20px;
+}
+.whatsapp-note, .footer {
+text-align: center;
+margin-top: 20px;
+font-style: italic;
+color: #555;
+}
+.footer a {
+color: #8B0000;
+font-weight: bold;
+text-decoration: none;
+}
+</style>
+</head>
+<body>
+<div class="form-container">
+<h1>Fk Parfumerie</h1>
+<form id="venteForm">
+<label for="nom">Nom et prénom :</label>
+<input type="text" id="nom" required>
+
+<label for="telephone">Téléphone (WhatsApp) :</label>
+<input type="tel" id="telephone" required>
+
+<label for="email">Email :</label>
+<input type="email" id="email" required>
+
+<label for="adresse">Adresse complète :</label>
+<textarea id="adresse" rows="3" required></textarea>
+
+<label>Produits qui vous intéressent :</label>
+<div class="checkbox-group">
+<label><input type="checkbox" value="Parfum de Dubai"> Parfum de Dubai</label><br>
+<label><input type="checkbox" value="Parfum Collection Privée"> Parfum Collection Privée</label><br>
+<label><input type="checkbox" value="Huile Parfumée"> Huile Parfumée</label><br>
+<label><input type="checkbox" value="Musc"> Musc</label><br>
+<label><input type="checkbox" value="Brûleur"> Brûleur</label><br>
+<label><input type="checkbox" value="Gel douche"> Gel douche</label><br>
+<label><input type="checkbox" value="Pompe Chambre"> Pompe Chambre</label><br>
+<label><input type="checkbox" value="Encens"> Encens</label>
+</div>
+
+<button type="submit">Envoyer & Commander sur WhatsApp</button>
+</form>
+<div class="whatsapp-note">
+Vous serez redirigé automatiquement vers WhatsApp pour finaliser votre commande.
+</div>
+<div class="footer">
+<p>Suivez-nous sur <a href="https://instagram.com/fkparfumerie" target="_blank">Instagram</a></p>
+</div>
+</div>
+
+<!-- WhatsApp Floating Button -->
+<script>
+const floatingBtn = document.createElement("a");
+floatingBtn.href = "https://wa.me/221765614441";
+floatingBtn.style.cssText = "position:fixed;width:60px;height:60px;bottom:20px;right:20px;background:#25D366;color:#fff;border-radius:50px;text-align:center;font-size:30px;box-shadow:2px 2px 3px #999;z-index:1000;";
+floatingBtn.innerHTML = "💬";
+document.body.appendChild(floatingBtn);
+</script>
+
+<!-- Form Submission Script -->
+<script>
+const googleSheetURL = "VOTRE_URL_SCRIPT"; // Remplacez par le lien Apps Script
+
+document.getElementById("venteForm").addEventListener("submit", function(e) {
+e.preventDefault();
+const nom = document.getElementById("nom").value;
+const telephone = document.getElementById("telephone").value;
+const email = document.getElementById("email").value;
+const adresse = document.getElementById("adresse").value;
+const checkboxes = document.querySelectorAll(".checkbox-group input[type='checkbox']:checked");
+const produits = Array.from(checkboxes).map(cb => cb.value).join(", ");
+
+// Enregistrement dans Google Sheets
+fetch(googleSheetURL, {
+method: "POST",
+mode: "no-cors",
+headers: { "Content-Type": "application/json" },
+body: JSON.stringify({ nom, telephone, email, adresse, produits })
+});
+
+// Redirection vers WhatsApp
+const message = `Bonjour, je souhaite commander des produits.\\nNom : ${nom}\\nTéléphone : ${telephone}\\nEmail : ${email}\\nAdresse : ${adresse}\\nProduits intéressés : ${produits}`;
+const encodedMessage = encodeURIComponent(message);
+const whatsappURL = "https://wa.me/221765614441?text=" + encodedMessage;
+window.location.href = whatsappURL;
+});
+</script>
+</body>
+</html>
